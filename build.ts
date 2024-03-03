@@ -4,6 +4,7 @@ import tailwindConfig from './tailwind.config';
 import path from 'path';
 import { transform } from 'lightningcss';
 import { generator, getConfig } from '@tanstack/router-generator';
+import { clientEnv } from './src/utils/env/client';
 
 export async function buildStyles() {
   postcss([tailwindcss({ config: tailwindConfig })])
@@ -13,7 +14,7 @@ export async function buildStyles() {
     )
     .then(async ({ css }) => {
       await Bun.write(
-        'dist/styles.css',
+        'dist/public/styles.css',
         transform({
           filename: 'styles.css',
           code: Buffer.from(css),
@@ -33,11 +34,25 @@ export async function build() {
     buildStyles(),
     Bun.build({
       entrypoints: ['src/app.tsx'],
+      outdir: 'dist/public',
+      naming: 'index.js',
+      minify: true,
+      target: 'browser',
+      define: Object.fromEntries(
+        Object.entries(clientEnv).map(([key, value]) => [
+          `Bun.env.CLIENT_${key}`,
+          value ?? '',
+        ])
+      ),
+    }),
+    Bun.write('dist/public/index.html', Bun.file('src/index.html')),
+    Bun.build({
+      entrypoints: ['src/api/index.ts'],
       outdir: 'dist',
       naming: 'index.js',
       minify: true,
+      target: 'bun',
     }),
-    Bun.write('dist/index.html', Bun.file('src/index.html')),
   ]);
 }
 
