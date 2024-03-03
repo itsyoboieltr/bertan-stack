@@ -1,17 +1,16 @@
 import postcss from 'postcss';
 import tailwindcss from 'tailwindcss';
-import tailwindConfig from './tailwind.config';
+import tailwindConfig from '../tailwind.config';
 import path from 'path';
 import { transform } from 'lightningcss';
 import { generator, getConfig } from '@tanstack/router-generator';
-import { clientEnv } from './src/utils/env/client';
+import { clientEnv } from '../src/utils/env/client';
 
 export async function buildStyles() {
   postcss([tailwindcss({ config: tailwindConfig })])
-    .process(
-      await Bun.file(path.join(import.meta.dir, 'src', 'styles.css')).text(),
-      { from: undefined }
-    )
+    .process(await Bun.file(path.join('src', 'styles.css')).text(), {
+      from: undefined,
+    })
     .then(async ({ css }) => {
       await Bun.write(
         'dist/public/styles.css',

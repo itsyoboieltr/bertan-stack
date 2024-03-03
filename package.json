@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "NODE_ENV=production bun build.ts",
-    "dev": "bun --watch dev.ts",
+    "build": "NODE_ENV=production bun framework/build.ts",
+    "dev": "bun --watch framework/dev.ts",
     "start": "NODE_ENV=production bun dist/index.js"
   },
   "devDependencies": {
