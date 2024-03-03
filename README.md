@@ -5,7 +5,7 @@
 The `BERTAN` stack:
 
 - [Bun](https://bun.sh)
-- [Elysia](https://elysiajs.com) (WIP)
+- [Elysia](https://elysiajs.com)
 - [React](https://react.dev/)
 - [TanStack Router](https://tanstack.com/router)
 
