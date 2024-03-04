@@ -27,10 +27,22 @@ export async function buildRoutes() {
   await generator(await getConfig());
 }
 
-export async function build() {
+export async function buildPublic() {
+  await Promise.all(
+    (await Array.fromAsync(new Bun.Glob('public/**').scan())).map(
+      async (file) => {
+        await Bun.write(
+          file.replace('public/', 'dist/public/'),
+          Bun.file(file)
+        );
+      }
+    )
+  );
+}
+
+export async function buildClient() {
   await Promise.all([
-    buildRoutes(),
-    buildStyles(),
+    Bun.write('dist/public/index.html', Bun.file('src/index.html')),
     Bun.build({
       entrypoints: ['src/app.tsx'],
       outdir: 'dist/public',
@@ -44,14 +56,27 @@ export async function build() {
         ])
       ),
     }),
-    Bun.write('dist/public/index.html', Bun.file('src/index.html')),
-    Bun.build({
-      entrypoints: ['src/api/index.ts'],
-      outdir: 'dist',
-      naming: 'index.js',
-      minify: true,
-      target: 'bun',
-    }),
+  ]);
+}
+
+export async function buildServer() {
+  await Bun.build({
+    entrypoints: ['src/api/index.ts'],
+    outdir: 'dist',
+    naming: 'index.js',
+    minify: true,
+    target: 'bun',
+  });
+}
+
+export async function build() {
+  await Bun.$`rm -rf dist`;
+  await Promise.all([
+    buildRoutes(),
+    buildStyles(),
+    buildPublic(),
+    buildClient(),
+    buildServer(),
   ]);
 }
 
