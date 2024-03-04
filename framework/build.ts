@@ -60,8 +60,7 @@ export async function buildClient() {
 }
 
 export async function buildServer() {
-  const exists = await Bun.file('src/api/index.ts').exists();
-  if (exists)
+  try {
     await Bun.build({
       entrypoints: ['src/api/index.ts'],
       outdir: 'dist',
@@ -69,10 +68,12 @@ export async function buildServer() {
       minify: true,
       target: 'bun',
     });
+  } catch (error) {
+    // API folder does not exist
+  }
 }
 
 export async function build() {
-  await Bun.$`rm -rf dist`;
   await Promise.all([
     buildRoutes(),
     buildStyles(),
