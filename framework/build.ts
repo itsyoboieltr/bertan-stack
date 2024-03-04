@@ -60,13 +60,15 @@ export async function buildClient() {
 }
 
 export async function buildServer() {
-  await Bun.build({
-    entrypoints: ['src/api/index.ts'],
-    outdir: 'dist',
-    naming: 'index.js',
-    minify: true,
-    target: 'bun',
-  });
+  const exists = await Bun.file('src/api/index.ts').exists();
+  if (exists)
+    await Bun.build({
+      entrypoints: ['src/api/index.ts'],
+      outdir: 'dist',
+      naming: 'index.js',
+      minify: true,
+      target: 'bun',
+    });
 }
 
 export async function build() {
