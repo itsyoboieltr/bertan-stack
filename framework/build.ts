@@ -24,7 +24,7 @@ export async function buildStyles() {
 }
 
 export async function buildRoutes() {
-  await generator(await getConfig());
+  await generator(await getConfig({ disableLogging: true }));
 }
 
 export async function buildPublic() {

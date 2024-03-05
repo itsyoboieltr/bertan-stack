@@ -30,9 +30,9 @@
     "drizzle-kit": "0.20.14",
     "drizzle-orm": "0.29.4",
     "drizzle-typebox": "0.1.1",
-    "@tanstack/react-router": "1.18.3",
-    "@tanstack/router-generator": "1.18.1",
-    "@tanstack/react-query": "5.24.6",
+    "@tanstack/react-router": "1.19.1",
+    "@tanstack/router-generator": "1.19.0",
+    "@tanstack/react-query": "5.25.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   }
