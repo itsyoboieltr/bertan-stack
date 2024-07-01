@@ -13,25 +13,17 @@
   "rules": {
     "react/jsx-curly-brace-presence": [
       "warn",
-      {
-        "props": "always",
-        "children": "never",
-        "propElementValues": "always"
-      }
+      { "props": "always", "children": "never", "propElementValues": "always" }
     ],
     "react/react-in-jsx-scope": "off",
     "import/newline-after-import": ["warn", { "count": 1 }],
     "drizzle/enforce-delete-with-where": [
       "error",
-      {
-        "drizzleObjectName": ["db"]
-      }
+      { "drizzleObjectName": ["db"] }
     ],
     "drizzle/enforce-update-with-where": [
       "error",
-      {
-        "drizzleObjectName": ["db"]
-      }
+      { "drizzleObjectName": ["db"] }
     ]
   }
 }

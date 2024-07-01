@@ -7,11 +7,11 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
-import { edenTreaty } from '@elysiajs/eden';
+import { treaty } from '@elysiajs/eden';
 import type { App } from './api';
 import { clientEnv } from './utils/env/client';
 
-export const { api } = edenTreaty<App>(clientEnv.API_URL);
+export const { api } = treaty<App>(clientEnv.API_URL);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +42,7 @@ declare module '@tanstack/react-router' {
 }
 
 const root = ReactDOM.createRoot(document.getElementById('app')!);
+
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>

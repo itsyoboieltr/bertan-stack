@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { handleEden, validate } from '../utils';
+import { validate } from '../utils';
 import { api } from '../app';
 import { Create } from '@sinclair/typebox/value';
 import Todo from '../components/Todo';
@@ -17,7 +17,7 @@ export const Route = createFileRoute('/')({
     const todoQuery = useQuery(todoQueryOptions());
 
     const todoAdd = useMutation({
-      mutationFn: async () => handleEden(await api.todo.post(todo)),
+      mutationFn: async () => await api.todo.post(todo),
       onSuccess: () => setTodo(Create(todoInsertSchema)),
     });
 
@@ -31,7 +31,7 @@ export const Route = createFileRoute('/')({
         <br />
         <div className={'flex flex-row justify-center gap-4'}>
           <input
-            className={'rounded border-2 border-black px-2 py-1'}
+            className={'rounded border-2 border-black py-1 px-2'}
             type={'text'}
             value={todo.data}
             onInput={({ currentTarget: { value: data } }) => setTodo({ data })}

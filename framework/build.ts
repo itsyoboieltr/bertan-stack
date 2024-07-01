@@ -1,26 +1,40 @@
-import postcss from 'postcss';
-import tailwindcss from 'tailwindcss';
-import tailwindConfig from '../tailwind.config';
-import path from 'path';
-import { transform } from 'lightningcss';
 import { generator, getConfig } from '@tanstack/router-generator';
+import { scanDir } from '@tailwindcss/oxide';
+import { Features, transform } from 'lightningcss';
+import path from 'path';
+import postcss from 'postcss';
+import atImport from 'postcss-import';
+import { compile } from 'tailwindcss';
 import { clientEnv } from '../src/utils/env/client';
 
-export async function buildStyles() {
-  postcss([tailwindcss({ config: tailwindConfig })])
-    .process(await Bun.file(path.join('src', 'styles.css')).text(), {
-      from: undefined,
-    })
-    .then(async ({ css }) => {
-      await Bun.write(
-        'dist/public/styles.css',
-        transform({
-          filename: 'styles.css',
-          code: Buffer.from(css),
-          minify: true,
-        }).code
-      );
-    });
+export async function buildStyles(
+  input = 'src/styles.css',
+  output = 'dist/public/styles.css'
+) {
+  const inputCSS = await postcss()
+    .use(atImport())
+    .process(await Bun.file(input).text(), { from: input })
+    .then((result) => result.css);
+
+  const { build } = compile(inputCSS);
+
+  const { candidates } = scanDir({ base: process.cwd() });
+  const outputCSS = build(candidates);
+
+  const optimizedCSS = transform({
+    filename: path.basename(input),
+    code: Buffer.from(outputCSS),
+    minify: true,
+    sourceMap: false,
+    drafts: { customMedia: true },
+    nonStandard: { deepSelectorCombinator: true },
+    include: Features.Nesting,
+    exclude: Features.LogicalProperties,
+    targets: { safari: (16 << 16) | (4 << 8) },
+    errorRecovery: true,
+  }).code.toString();
+
+  await Bun.write(output, optimizedCSS);
 }
 
 export async function buildRoutes() {

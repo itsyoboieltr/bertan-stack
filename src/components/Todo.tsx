@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import { api } from '../app';
-import { handleEden } from '../utils';
 
 interface TodoProps {
   id: string;
@@ -9,7 +8,7 @@ interface TodoProps {
 
 export default function Todo(props: TodoProps) {
   const todoDelete = useMutation({
-    mutationFn: async () => handleEden(await api.todo[props.id]!.delete()),
+    mutationFn: async () => await api.todo({ id: props.id }).delete(),
   });
   return (
     <div className={'flex flex-row justify-center gap-4'}>
